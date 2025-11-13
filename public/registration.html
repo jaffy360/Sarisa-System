@@ -1,0 +1,37 @@
+
+<!DOCTYPE html><html><head>
+<meta charset="utf-8"/><title>Registration</title>
+<link rel="stylesheet" href="/css/style.css">
+</head><body>
+  <div class="login-bg">
+    <div class="login-card">
+      <h2>Registration</h2>
+      <div class="stack">
+        <input id="name" class="input" placeholder="Full Name" required>
+        <input id="email" class="input" placeholder="Email" type="email" required>
+        <input id="password" class="input" placeholder="Password" type="password" required>
+        <div class="row">
+          <label><input type="radio" name="role" value="parent" checked> Parent</label>
+          <label><input type="radio" name="role" value="child"> Child</label>
+        </div>
+        <button id="btnCreate" class="btn">Continue</button>
+        <button id="btnBack" class="btn soft">Back</button>
+        <p id="msg" class="muted"></p>
+      </div>
+    </div>
+  </div>
+<script>
+async function api(p,o={}){const r=await fetch(p,{credentials:'include',headers:{'Content-Type':'application/json'},...o});if(!r.ok)throw new Error((await r.json()).error||'Request failed');return r.json();}
+document.getElementById('btnBack').onclick=()=>history.back();
+document.getElementById('btnCreate').onclick=async()=>{
+  const role=[...document.querySelectorAll('input[name=role]')].find(r=>r.checked).value;
+  const name=document.getElementById('name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  try{
+    await api('/api/auth/register',{method:'POST',body:JSON.stringify({name,email,password,role})});
+    document.getElementById('msg').textContent='Account created! You can login now.';
+  }catch(e){document.getElementById('msg').textContent=e.message;}
+};
+</script>
+</body></html>

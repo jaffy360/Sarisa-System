@@ -1,0 +1,208 @@
+
+<!DOCTYPE html><html><head>
+<meta charset="utf-8"/><title>Child Dashboard</title>
+<link rel="stylesheet" href="/css/style.css">
+</head><body>
+  <div class="container">
+    <div class="header-hero" style="background:linear-gradient(135deg,var(--brand2),#8d86ff)">
+      <div>
+        <div>Hi, <strong id="childHeaderName">Maria</strong>! 👋</div>
+        <div class="row" style="margin-top:10px">
+          <label class="muted">Choose your theme:</label>
+          <select class="input" style="width:160px">
+            <option>Purple</option><option>Pink</option><option>Green</option>
+          </select>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="chip"><div class="muted" style="color:#fff">⭐ Stars Today</div><div id="kpiStars" class="v">12</div></div>
+        <div class="chip"><div class="muted" style="color:#fff">✅ Tasks Done</div><div id="kpiTasks" class="v">5</div></div>
+        <div class="chip"><div class="muted" style="color:#fff">🔥 Streak</div><div id="kpiStreak" class="v">3 Days</div></div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:20px">
+      <div class="card">
+        <h3>📝 Task List</h3>
+        <form id="taskForm" class="row">
+          <input id="taskTitle" class="input" placeholder="New task..." required>
+          <select id="taskPriority" class="input"><option value="0">Low</option><option value="1">Medium</option><option value="2">High</option></select>
+          <button class="btn" type="submit">Add</button>
+        </form>
+        <ul id="taskList" class="list"></ul>
+      </div>
+
+      <div class="card">
+        <h3>🏅 Gamified Rewards</h3>
+        <div>Stars Earned: <span class="badge">★★★★★</span></div>
+        <div style="margin-top:10px">Badges Unlocked: <span class="badge">Focus Hero</span> <span class="badge">Fast Reader</span></div>
+      </div>
+
+      <div class="card">
+        <h3>⏲️ Timers & Reminders</h3>
+        <div>Focus Timer: <strong>25:00</strong></div>
+        <div class="row" style="margin-top:10px"><button class="btn">Start Timer</button><button class="btn soft">Take a Break</button></div>
+      </div>
+
+      <div class="card">
+        <h3>😊 Mood Check-ins</h3>
+        <div style="font-size:26px">😁 🙂 😌 😣 😴</div>
+        <div class="muted">How are you feeling today?</div>
+      </div>
+
+      <div class="card">
+        <h3>🎉 Positive Reinforcement</h3>
+        <div>Great job completing your tasks!</div>
+        <button class="btn soft" style="margin-top:10px">Show Encouragement</button>
+      </div>
+
+      <div class="card">
+        <h3>🔒 Safe Mode Access</h3>
+        <div class="muted">Restricted access view.</div>
+      </div>
+
+      <div class="card">
+        <h3>🆘 Help & Support</h3>
+        <div class="muted">Calming activities & quick guide.</div>
+      </div>
+    </div>
+    <div class="row" style="justify-content:flex-end;margin:20px 0">
+      <button id="btnLogout" class="btn soft">Logout</button>
+    </div>
+  </div>
+
+<!-- Remove below update -->
+
+<!-- <script>
+async function api(p,o={}){const r=await fetch(p,{credentials:'include',headers:{'Content-Type':'application/json'},...o});if(!r.ok)throw new Error((await r.json()).error||'Request failed');return r.json();}
+document.getElementById('btnLogout').onclick=async()=>{await api('/api/auth/logout',{method:'POST'});location.href='/';};
+
+const list=document.getElementById('taskList');
+function renderTasks(rows){
+  list.innerHTML='';
+  rows.forEach(t=>{
+    const li=document.createElement('li');
+    li.innerHTML=`<span>${t.title}</span><div><button class="btn soft done" data-id="${t.id}">Done</button></div>`;
+    list.appendChild(li);
+  });
+  list.querySelectorAll('.done').forEach(b=>b.onclick=async(e)=>{
+    const id=e.target.getAttribute('data-id');await api('/api/child/tasks/'+id,{method:'PATCH',body:JSON.stringify({status:'done'})});load();
+  });
+}
+
+document.getElementById('taskForm').onsubmit=async(e)=>{
+  e.preventDefault();
+  const title=document.getElementById('taskTitle').value;
+  const priority=Number(document.getElementById('taskPriority').value||0);
+  await api('/api/child/tasks',{method:'POST',body:JSON.stringify({title,priority})});
+  e.target.reset();load();
+};
+
+async function load(){
+  const me=await api('/api/auth/me');if(!me.user||me.user.role!=='child'){location.href='/';return;}
+  document.getElementById('childHeaderName').textContent=me.user.name||'Child';
+  const tasks=await api('/api/child/tasks');renderTasks(tasks);
+}
+load();
+</script> -->
+
+<script>
+async function api(p,o={}) {
+  const r = await fetch(p,{credentials:'include',headers:{'Content-Type':'application/json'},...o});
+  if(!r.ok) throw new Error((await r.json()).error || 'Request failed');
+  return r.json();
+}
+
+document.getElementById('btnLogout').onclick = async () => {
+  await api('/api/auth/logout',{method:'POST'});
+  location.href = '/';
+};
+
+// 🎨 THEME LOGIC
+const themeSelect = document.querySelector('select');
+const headerHero = document.querySelector('.header-hero');
+
+// Function to apply theme colors
+function applyTheme(theme) {
+  let headerColor = '', bgGradient = '';
+
+  if (theme === 'Pink') {
+    headerColor = 'linear-gradient(135deg, #ff6b6b, #ffb5b5)';
+    bgGradient = `
+      radial-gradient(800px 400px at 90% 10%, rgba(255,182,182,0.35), transparent 70%),
+      radial-gradient(800px 600px at 10% 90%, rgba(255,155,155,0.3), transparent 70%),
+      #fff6f7`;
+    document.documentElement.style.setProperty('--brand2', '#ff6b6b');
+  } 
+  else if (theme === 'Green') {
+    headerColor = 'linear-gradient(135deg, #4caf50, #a5d6a7)';
+    bgGradient = `
+      radial-gradient(800px 400px at 90% 10%, rgba(143, 224, 150, 0.3), transparent 70%),
+      radial-gradient(800px 600px at 10% 90%, rgba(116, 226, 150, 0.25), transparent 70%),
+      #f7fff7`;
+    document.documentElement.style.setProperty('--brand2', '#4caf50');
+  } 
+  else {
+    // Default purple
+    headerColor = 'linear-gradient(135deg, #6c63ff, #8d86ff)';
+    bgGradient = `
+      radial-gradient(800px 400px at 90% 10%, rgba(150,145,255,0.35), transparent 70%),
+      radial-gradient(800px 600px at 10% 90%, rgba(140,130,255,0.3), transparent 70%),
+      #f6f7fb`;
+    document.documentElement.style.setProperty('--brand2', '#6c63ff');
+  }
+
+  headerHero.style.background = headerColor;
+  document.body.style.background = bgGradient;
+
+  localStorage.setItem('sarisa-theme', theme);
+  themeSelect.value = theme;
+}
+
+// Load theme on start
+const savedTheme = localStorage.getItem('sarisa-theme') || 'Purple';
+applyTheme(savedTheme);
+
+// Change when dropdown changes
+themeSelect.addEventListener('change', e => applyTheme(e.target.value));
+
+// 🧩 TASK LOGIC
+const list = document.getElementById('taskList');
+
+function renderTasks(rows) {
+  list.innerHTML = '';
+  rows.forEach(t => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span>${t.title}</span><div><button class="btn soft done" data-id="${t.id}">Done</button></div>`;
+    list.appendChild(li);
+  });
+  list.querySelectorAll('.done').forEach(b => b.onclick = async e => {
+    const id = e.target.getAttribute('data-id');
+    await api('/api/child/tasks/' + id, { method:'PATCH', body: JSON.stringify({ status:'done' }) });
+    load();
+  });
+}
+
+document.getElementById('taskForm').onsubmit = async e => {
+  e.preventDefault();
+  const title = document.getElementById('taskTitle').value;
+  const priority = Number(document.getElementById('taskPriority').value || 0);
+  await api('/api/child/tasks', { method:'POST', body: JSON.stringify({ title, priority }) });
+  e.target.reset();
+  load();
+};
+
+async function load() {
+  const me = await api('/api/auth/me');
+  if (!me.user || me.user.role !== 'child') {
+    location.href = '/';
+    return;
+  }
+  document.getElementById('childHeaderName').textContent = me.user.name || 'Child';
+  const tasks = await api('/api/child/tasks');
+  renderTasks(tasks);
+}
+load();
+</script>
+
+</body></html>

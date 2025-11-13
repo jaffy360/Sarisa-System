@@ -1,0 +1,283 @@
+
+<!DOCTYPE html><html><head>
+<meta charset="utf-8"/><title>Parent Dashboard</title>
+<link rel="stylesheet" href="/css/style.css">
+</head><body>
+  <div class="container">
+    <div class="header-hero">
+      <div>
+        <div style="opacity:.85">Child: <strong id="childName">Child1</strong></div>
+        <div class="muted" style="opacity:.9">Guardian: <span id="guardianName">Mother User</span></div>
+        <div class="row" style="margin-top:10px">
+          <button id="btnViewChild" class="card-link">👶 View Child Dashboard</button>
+          <input id="childEmail" placeholder="Link child by email" class="input" style="width:260px">
+          <button id="btnLink" class="btn">Link Child</button>
+          <button id="btnLogout" class="btn soft">Logout</button>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="chip"><div class="muted" style="color:#fff">Today's Sessions</div><div id="kpiSessions" class="v">3</div></div>
+        <div class="chip"><div class="muted" style="color:#fff">Avg. Focus Time</div><div id="kpiFocus" class="v">32 mins</div></div>
+        <div class="chip"><div class="muted" style="color:#fff">Goal Adherence</div><div id="kpiAdh" class="v">87%</div></div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:20px">
+      <div class="card" style="grid-column: span 3">
+        <h3>📚 Learning Progress</h3>
+        <div class="muted">Reading</div><div class="progress"><div class="bar" style="width:80%"></div></div>
+        <div class="muted" style="margin-top:8px">Writing</div><div class="progress"><div class="bar" style="width:60%;background:#f6b233"></div></div>
+        <div class="muted" style="margin-top:8px">Math</div><div class="progress"><div class="bar" style="width:90%;background:#2ccd6f"></div></div>
+      </div>
+      <div class="card" style="grid-column: span 3">
+        <h3>⏱️ Time Spent on Features</h3>
+        <ul class="list">
+          <li>Reading Lessons – 45 mins</li>
+          <li>Writing Activities – 20 mins</li>
+          <li>Math Practice – 35 mins</li>
+          <li>Games / Rewards – 15 mins</li>
+        </ul>
+      </div>
+      <div class="card" style="grid-column: span 3">
+        <h3>📝 Engagement & Adherence</h3>
+        <div>Session Frequency: 5/week</div>
+        <div>Task Completion Rate: 85%</div>
+        <div>Routine Adherence: 90%</div>
+      </div>
+      <div class="card" style="grid-column: span 3">
+        <h3>📅 Weekly / Daily Reports</h3>
+        <div><strong>Week Summary:</strong> 9 of 10 tasks completed</div>
+        <div><strong>Improvement:</strong> +10% from last week</div>
+        <div><strong>Focus:</strong> Better in morning sessions</div>
+        <button class="btn soft" style="margin-top:10px">View Detailed Report</button>
+      </div>
+      <div class="card" style="grid-column: span 6">
+        <h3>🧠 Reports & Insights</h3>
+        <ul class="list">
+          <li>Focus Consistency: Stable (80%)</li>
+          <li>Mood Tracker: 4 Happy, 2 Calm, 1 Frustrated</li>
+          <li>Communication Log: 2 messages from teacher</li>
+        </ul>
+      </div>
+      <div class="card" style="grid-column: span 6">
+        <h3>💡 Suggested Actions</h3>
+        <ul class="list">
+          <li>Shorter morning study sessions</li>
+          <li>Reward after every 3 tasks</li>
+          <li>Encourage breaks between lessons</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row" style="justify-content:center;margin:20px 0">
+      <button class="btn soft">📄 Download Report (PDF)</button>
+      <button class="btn soft">📊 Export Data (CSV)</button>
+      <button class="btn soft">⚙️ Settings & Customization</button>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h3>Your Linked Children</h3>
+      <div id="children"></div>
+    </div>
+  </div>
+
+<!-- Settings Panel -->
+<div id="settingsBackdrop" class="settings-backdrop hidden"></div>
+
+<div id="settingsPanel" class="settings-panel hidden">
+  <button id="closeSettings" class="close-btn">✖</button>
+  <h3>⚙️ Settings & Customization</h3>
+  <div class="settings-content">
+    <label>
+      <span>🎨 Theme:</span>
+      <select id="parentTheme" class="input">
+        <option value="Pink">Pink</option>
+        <option value="Purple">Purple</option>
+        <option value="Green">Green</option>
+      </select>
+    </label>
+
+    <label>
+      <span>📅 Report Frequency:</span>
+      <select id="reportFrequency" class="input">
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+    </label>
+
+    <label>
+      <span>🔔 Notifications:</span>
+      <input type="checkbox" id="notifications" checked>
+      <small>Receive updates when your child completes tasks.</small>
+    </label>
+
+    <label>
+      <span>🧠 Focus Reminder:</span>
+      <input type="checkbox" id="focusReminder">
+      <small>Remind child to take breaks every 30 minutes.</small>
+    </label>
+  </div>
+</div>
+
+
+
+<script>
+async function api(p, o = {}) {
+  const r = await fetch(p, { credentials: 'include', headers: { 'Content-Type': 'application/json' }, ...o });
+  if (!r.ok) throw new Error((await r.json()).error || 'Request failed');
+  return r.json();
+}
+
+document.getElementById('btnLogout').onclick = async () => {
+  await api('/api/auth/logout', { method: 'POST' });
+  location.href = '/';
+};
+
+document.getElementById('btnLink').onclick = async () => {
+  try {
+    await api('/api/parent/link-child', {
+      method: 'POST',
+      body: JSON.stringify({ childEmail: document.getElementById('childEmail').value })
+    });
+    load();
+  } catch (e) {
+    alert(e.message);
+  }
+};
+
+document.getElementById('btnViewChild').onclick = () => location.href = '/child.html';
+
+function renderChildren(list) {
+  const root = document.getElementById('children');
+  root.innerHTML = '';
+  list.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.margin = '10px 0';
+    div.innerHTML = `<strong>${c.name}</strong> (${c.email}) · Tasks: ${c.done_tasks}/${c.total_tasks} · Points: ${c.points}`;
+    root.appendChild(div);
+  });
+}
+
+async function load() {
+  const me = await api('/api/auth/me');
+  if (!me.user || me.user.role !== 'parent') location.href = '/';
+  const kids = await api('/api/parent/children');
+  renderChildren(kids);
+  document.getElementById('guardianName').textContent = me.user.name || 'Parent';
+  if (kids[0]) document.getElementById('childName').textContent = kids[0].name;
+}
+load();
+
+// SETTINGS BUTTON SELECTOR
+const settingsButton = Array.from(document.querySelectorAll('button')).find(btn =>
+  btn.textContent.includes('Settings & Customization')
+);
+const settingsPanel = document.getElementById('settingsPanel');
+const settingsBackdrop = document.getElementById('settingsBackdrop');
+
+if (settingsButton && settingsPanel && settingsBackdrop) {
+  settingsButton.addEventListener('click', () => {
+    const isHidden = settingsPanel.classList.contains('hidden');
+    settingsPanel.classList.toggle('hidden', !isHidden);
+    settingsBackdrop.classList.toggle('hidden', !isHidden);
+  });
+
+  // Click outside to close
+  settingsBackdrop.addEventListener('click', () => {
+    settingsPanel.classList.add('hidden');
+    settingsBackdrop.classList.add('hidden');
+  });
+
+  const closeSettings = document.getElementById('closeSettings');
+
+if (closeSettings) {
+  closeSettings.addEventListener('click', () => {
+    settingsPanel.classList.add('hidden');
+    settingsBackdrop.classList.add('hidden');
+  });
+}
+
+}
+
+</script>
+
+<!-- <script>
+async function api(p,o={}){const r=await fetch(p,{credentials:'include',headers:{'Content-Type':'application/json'},...o});if(!r.ok)throw new Error((await r.json()).error||'Request failed');return r.json();}
+document.getElementById('btnLogout').onclick=async()=>{await api('/api/auth/logout',{method:'POST'});location.href='/';};
+document.getElementById('btnLink').onclick=async()=>{
+  try{await api('/api/parent/link-child',{method:'POST',body:JSON.stringify({childEmail:document.getElementById('childEmail').value})});load();}
+  catch(e){alert(e.message);}
+};
+document.getElementById('btnViewChild').onclick=()=>location.href='/child.html';
+
+function renderChildren(list){
+  const root=document.getElementById('children');root.innerHTML='';
+  list.forEach(c=>{const div=document.createElement('div');div.className='card';div.style.margin='10px 0';
+    div.innerHTML=`<strong>${c.name}</strong> (${c.email}) · Tasks: ${c.done_tasks}/${c.total_tasks} · Points: ${c.points}`;
+    root.appendChild(div);
+  });
+}
+async function load(){
+  const me=await api('/api/auth/me');if(!me.user||me.user.role!=='parent')location.href='/';
+  const kids=await api('/api/parent/children');renderChildren(kids);
+  document.getElementById('guardianName').textContent=me.user.name||'Parent';
+  if(kids[0]) document.getElementById('childName').textContent=kids[0].name;
+}
+load();
+
+// Button Settings
+
+const settingsButton = document.querySelector('button:contains("Settings & Customization")') || document.querySelector('.btn-settings');
+const settingsPanel = document.getElementById('settingsPanel');
+
+if (settingsButton && settingsPanel) {
+  settingsButton.addEventListener('click', () => {
+    settingsPanel.classList.toggle('hidden');
+  });
+}
+
+// Optional: Save settings locally
+document.getElementById('parentTheme').addEventListener('change', (e) => {
+  localStorage.setItem('parent-theme', e.target.value);
+});
+document.getElementById('reportFrequency').addEventListener('change', (e) => {
+  localStorage.setItem('report-frequency', e.target.value);
+});
+document.getElementById('notifications').addEventListener('change', (e) => {
+  localStorage.setItem('notifications', e.target.checked);
+});
+document.getElementById('focusReminder').addEventListener('change', (e) => {
+  localStorage.setItem('focus-reminder', e.target.checked);
+});
+
+</script> -->
+
+
+<!-- BTN settings
+<script>
+const settingsButton = document.querySelector('button:contains("Settings & Customization")') || document.querySelector('.btn-settings');
+const settingsPanel = document.getElementById('settingsPanel');
+
+if (settingsButton && settingsPanel) {
+  settingsButton.addEventListener('click', () => {
+    settingsPanel.classList.toggle('hidden');
+  });
+}
+
+// Optional: Save settings locally
+document.getElementById('parentTheme').addEventListener('change', (e) => {
+  localStorage.setItem('parent-theme', e.target.value);
+});
+document.getElementById('reportFrequency').addEventListener('change', (e) => {
+  localStorage.setItem('report-frequency', e.target.value);
+});
+document.getElementById('notifications').addEventListener('change', (e) => {
+  localStorage.setItem('notifications', e.target.checked);
+});
+document.getElementById('focusReminder').addEventListener('change', (e) => {
+  localStorage.setItem('focus-reminder', e.target.checked);
+});
+</script> -->
+
+</body></html>

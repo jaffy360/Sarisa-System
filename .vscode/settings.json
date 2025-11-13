@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "SarisaSYSDB",
+            "database": "${workspaceFolder:sarisa-system}/data/sarisa.db"
+        }
+    ]
+}

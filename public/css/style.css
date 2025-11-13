@@ -1,0 +1,212 @@
+
+:root{
+  --bg:#f6f7fb;
+  --brand:#f25f5c;      /* coral pink */
+  --brand2:#6c63ff;     /* violet */
+  --chip:#ff6b6b;
+  --text:#2b2b2b;
+  --muted:#6c7790;
+  --card:#ffffff;
+  --stroke:#e9ecf5;
+  --shadow:0 8px 24px rgba(16,24,40,.08);
+  --radius:16px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
+
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+.card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.card h3{margin:6px 0 12px 0}
+.muted{color:var(--muted)}
+
+.header-hero{
+  background:linear-gradient(135deg, var(--brand) 0%, #ff8b7b 60%);
+  color:#fff;border-radius:20px;padding:22px 22px 26px 22px;position:relative;
+}
+.header-hero .stats{display:flex;gap:14px;position:absolute;right:22px;top:22px}
+.chip{background:rgba(255,255,255,.25);backdrop-filter:blur(4px);color:#fff;padding:10px 14px;border-radius:12px;min-width:135px;text-align:center;font-weight:600;box-shadow:var(--shadow)}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:10px 14px;cursor:pointer;box-shadow:var(--shadow)}
+.btn.soft{background:#ffe3e3;color:#b33b3a}
+.btn.violet{background:var(--brand2)}
+
+.login-bg{
+  min-height:100vh;
+  background:radial-gradient(1000px 500px at 70% 10%, #ffb0a7 0%, rgba(255,176,167,0) 60%),
+             radial-gradient(1000px 600px at 30% 90%, #ff8b7b 0%, rgba(255,139,123,0) 55%),
+             var(--brand);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.login-card{max-width:420px;width:100%;background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:24px;border:1px solid var(--stroke);text-align:center}
+.login-card h1{letter-spacing:2px;margin:6px 0 8px}
+.input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--stroke);background:#fffdf2}
+.stack>*{margin-top:10px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.kpi{background:#fff;border-radius:14px;border:1px solid var(--stroke);padding:10px 12px;text-align:center;box-shadow:var(--shadow)}
+.kpi .v{font-weight:800;font-size:18px;color:#c33}
+
+.progress{height:10px;background:#eef1f8;border-radius:8px;overflow:hidden}
+.progress .bar{height:100%;background:var(--brand2);width:60%}
+
+.card-link{display:inline-flex;align-items:center;gap:8px;background:#ffe3e3;color:#b33b3a;border-radius:999px;padding:8px 12px;font-weight:600;border:1px solid #ffd2d2}
+
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--stroke)}
+.badge{display:inline-block;background:#ffe98f;color:#7a5800;padding:6px 10px;border-radius:999px;font-weight:700}
+
+
+/* Update on Child DashBoard Background Changes Color */
+
+/* Make dashboard fill the screen neatly */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Main container adapts to screen */
+.container {
+  min-height: 100vh; /* full height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 40px 5vw;
+  box-sizing: border-box;
+}
+
+/* Grid responsive layout */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+
+/* Adjust hero spacing */
+.header-hero {
+  padding: 24px;
+  margin-bottom: 20px;
+  border-radius: 18px;
+}
+
+/* Cards auto-fit cleanly and centered */
+.card {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Ensure background covers entire screen */
+body {
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+/* Logout button always visible bottom-right */
+#btnLogout {
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+}
+
+/* Smooth hover effect for modern feel */
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+
+/* Settings Panel */
+.settings-panel {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  border: 1px solid var(--stroke);
+  padding: 24px 28px;
+  width: 420px;
+  max-width: 90%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 100;
+  transition: all 0.3s ease;
+  opacity: 1;
+}
+
+.settings-panel.hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+  pointer-events: none;
+}
+
+.settings-panel h3 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  color: var(--brand);
+  text-align: center;
+}
+
+.settings-content label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.settings-content small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Optional dim background when panel is open */
+.settings-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(3px);
+  z-index: 99;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.settings-backdrop.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: var(--brand);
+  transform: scale(1.1);
+}
+
+
+
+
