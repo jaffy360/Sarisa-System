@@ -22,52 +22,11 @@
       </div>
     </div>
 
-    <div class="grid" style="margin-top:20px">
-      <div class="card" style="grid-column: span 3">
-        <h3>📚 Learning Progress</h3>
-        <div class="muted">Reading</div><div class="progress"><div class="bar" style="width:80%"></div></div>
-        <div class="muted" style="margin-top:8px">Writing</div><div class="progress"><div class="bar" style="width:60%;background:#f6b233"></div></div>
-        <div class="muted" style="margin-top:8px">Math</div><div class="progress"><div class="bar" style="width:90%;background:#2ccd6f"></div></div>
-      </div>
-      <div class="card" style="grid-column: span 3">
-        <h3>⏱️ Time Spent on Features</h3>
-        <ul class="list">
-          <li>Reading Lessons – 45 mins</li>
-          <li>Writing Activities – 20 mins</li>
-          <li>Math Practice – 35 mins</li>
-          <li>Games / Rewards – 15 mins</li>
-        </ul>
-      </div>
-      <div class="card" style="grid-column: span 3">
-        <h3>📝 Engagement & Adherence</h3>
-        <div>Session Frequency: 5/week</div>
-        <div>Task Completion Rate: 85%</div>
-        <div>Routine Adherence: 90%</div>
-      </div>
-      <div class="card" style="grid-column: span 3">
-        <h3>📅 Weekly / Daily Reports</h3>
-        <div><strong>Week Summary:</strong> 9 of 10 tasks completed</div>
-        <div><strong>Improvement:</strong> +10% from last week</div>
-        <div><strong>Focus:</strong> Better in morning sessions</div>
-        <button class="btn soft" style="margin-top:10px">View Detailed Report</button>
-      </div>
-      <div class="card" style="grid-column: span 6">
-        <h3>🧠 Reports & Insights</h3>
-        <ul class="list">
-          <li>Focus Consistency: Stable (80%)</li>
-          <li>Mood Tracker: 4 Happy, 2 Calm, 1 Frustrated</li>
-          <li>Communication Log: 2 messages from teacher</li>
-        </ul>
-      </div>
-      <div class="card" style="grid-column: span 6">
-        <h3>💡 Suggested Actions</h3>
-        <ul class="list">
-          <li>Shorter morning study sessions</li>
-          <li>Reward after every 3 tasks</li>
-          <li>Encourage breaks between lessons</li>
-        </ul>
-      </div>
-    </div>
+  <div class="card" style="margin-top:10px">
+  <h3>Your Linked Children</h3>
+  <div id="childrenContainer"></div>
+</div>
+
 
     <div class="row" style="justify-content:center;margin:20px 0">
       <button class="btn soft">📄 Download Report (PDF)</button>
@@ -75,11 +34,6 @@
       <button class="btn soft">⚙️ Settings & Customization</button>
     </div>
 
-    <div class="card" style="margin-top:10px">
-      <h3>Your Linked Children</h3>
-      <div id="children"></div>
-    </div>
-  </div>
 
 <!-- Settings Panel -->
 <div id="settingsBackdrop" class="settings-backdrop hidden"></div>
@@ -119,6 +73,64 @@
   </div>
 </div>
 
+<!-- Child Dashboard Template -->
+<template id="childDashboardTemplate">
+  <div class="child-section">
+
+    <h3 class="child-toggle">Child Name ▼</h3>
+
+    <div class="child-content collapsed">
+  <div class="child-modules-grid">
+
+    <!-- Learning Progress -->
+    <div class="card">
+      <h3>📚 Learning Progress</h3>
+      <div class="muted">Reading</div>
+      <div class="progress"><div class="bar reading-bar"></div></div>
+
+      <div class="muted" style="margin-top:8px">Writing</div>
+      <div class="progress"><div class="bar writing-bar"></div></div>
+
+      <div class="muted" style="margin-top:8px">Math</div>
+      <div class="progress"><div class="bar math-bar"></div></div>
+    </div>
+
+    <!-- Time Spent -->
+    <div class="card">
+      <h3>⏱️ Time Spent on Features</h3>
+      <ul class="list time-list"></ul>
+    </div>
+
+    <!-- Engagement -->
+    <div class="card">
+      <h3>📝 Engagement & Adherence</h3>
+      <div class="engagement-container"></div>
+    </div>
+
+    <!-- Weekly Reports -->
+    <div class="card">
+      <h3>📅 Weekly / Daily Reports</h3>
+      <div class="weekly-container"></div>
+    </div>
+
+    <!-- Insights -->
+    <div class="card">
+      <h3>🧠 Reports & Insights</h3>
+      <ul class="list insights-list"></ul>
+    </div>
+
+    <!-- Suggestions -->
+    <div class="card">
+      <h3>💡 Suggested Actions</h3>
+      <ul class="list suggestions-list"></ul>
+    </div>
+
+  </div>
+</div>
+
+
+  </div>
+</template>
 
 
 <script>
@@ -147,17 +159,67 @@ document.getElementById('btnLink').onclick = async () => {
 
 document.getElementById('btnViewChild').onclick = () => location.href = '/child.html';
 
-function renderChildren(list) {
-  const root = document.getElementById('children');
-  root.innerHTML = '';
-  list.forEach(c => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.style.margin = '10px 0';
-    div.innerHTML = `<strong>${c.name}</strong> (${c.email}) · Tasks: ${c.done_tasks}/${c.total_tasks} · Points: ${c.points}`;
-    root.appendChild(div);
+function renderChildren(children) {
+  const container = document.getElementById('childrenContainer');
+  container.innerHTML = '';
+
+  const template = document.getElementById('childDashboardTemplate');
+
+  children.forEach(child => {
+    const clone = template.content.cloneNode(true);
+
+    const toggle = clone.querySelector('.child-toggle');
+    const content = clone.querySelector('.child-content');
+
+    toggle.textContent = `${child.name} (${child.email}) ▼`;
+
+    toggle.addEventListener('click', () => {
+      content.classList.toggle('open');
+      toggle.textContent = content.classList.contains('open')
+        ? `${child.name} (${child.email}) ▲`
+        : `${child.name} (${child.email}) ▼`;
+    });
+
+    // Demo data — change later for real DB
+    clone.querySelector('.reading-bar').style.width = "80%";
+    clone.querySelector('.writing-bar').style.width = "60%";
+    clone.querySelector('.math-bar').style.width = "90%";
+
+    clone.querySelector('.time-list').innerHTML = `
+      <li>Reading – 45 mins</li>
+      <li>Writing – 20 mins</li>
+      <li>Math – 35 mins</li>
+      <li>Games – 15 mins</li>
+    `;
+
+    clone.querySelector('.engagement-container').innerHTML = `
+      Session Frequency: 5/week<br>
+      Task Completion Rate: 85%<br>
+      Routine Adherence: 90%
+    `;
+
+    clone.querySelector('.weekly-container').innerHTML = `
+      <strong>Week Summary:</strong> 9/10 tasks<br>
+      <strong>Improvement:</strong> +10%<br>
+      <strong>Focus:</strong> Morning sessions best
+    `;
+
+    clone.querySelector('.insights-list').innerHTML = `
+      <li>Focus Consistency: 80%</li>
+      <li>Mood Tracker: 4 Happy, 2 Calm</li>
+      <li>Teacher Messages: 2</li>
+    `;
+
+    clone.querySelector('.suggestions-list').innerHTML = `
+      <li>Shorter morning sessions</li>
+      <li>Reward every 3 tasks</li>
+      <li>Breaks between lessons</li>
+    `;
+
+    container.appendChild(clone);
   });
 }
+
 
 async function load() {
   const me = await api('/api/auth/me');
@@ -173,8 +235,6 @@ load();
 const settingsButton = Array.from(document.querySelectorAll('button')).find(btn =>
   btn.textContent.includes('Settings & Customization')
 );
-const settingsPanel = document.getElementById('settingsPanel');
-const settingsBackdrop = document.getElementById('settingsBackdrop');
 
 if (settingsButton && settingsPanel && settingsBackdrop) {
   settingsButton.addEventListener('click', () => {
@@ -199,6 +259,9 @@ if (closeSettings) {
 }
 
 }
+
+
+
 
 </script>
 
@@ -279,5 +342,7 @@ document.getElementById('focusReminder').addEventListener('change', (e) => {
   localStorage.setItem('focus-reminder', e.target.checked);
 });
 </script> -->
+
+
 
 </body></html>
