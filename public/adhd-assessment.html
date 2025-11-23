@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>ADHD Screening - SARISA</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="login-bg">
+    <div class="login-card" style="max-width:640px;text-align:left">
+      <h1>🧠 ADHD Traits Screening</h1>
+      <p class="muted" style="margin-bottom:16px">
+        This is an educational screening tool only. It does not diagnose ADHD.<br>
+        Please answer based on your child’s usual behavior.
+      </p>
+
+      <form id="adhdForm" class="stack">
+        <input type="hidden" id="childIdInput">
+
+        <h3>Inattentive behaviors</h3>
+
+        <label>
+          Often has trouble sustaining attention on tasks or play?
+          <select class="input" name="inat1" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often loses things needed for tasks (books, pencils, materials)?
+          <select class="input" name="inat2" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often seems not to listen when spoken to directly?
+          <select class="input" name="inat3" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often avoids or dislikes tasks that require sustained mental effort (homework, reading)?
+          <select class="input" name="inat4" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often forgetful in daily activities (chores, instructions, school work)?
+          <select class="input" name="inat5" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often has difficulty organizing tasks or activities?
+          <select class="input" name="inat6" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <h3 style="margin-top:18px">Hyperactive / impulsive behaviors</h3>
+
+        <label>
+          Often fidgets, taps hands/feet, or squirms in seat?
+          <select class="input" name="hyp1" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often leaves seat when remaining seated is expected?
+          <select class="input" name="hyp2" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often runs about or climbs excessively in situations where it is not appropriate?
+          <select class="input" name="hyp3" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often talks excessively?
+          <select class="input" name="hyp4" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often blurts out answers before questions have been completed?
+          <select class="input" name="hyp5" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <label>
+          Often has difficulty waiting his/her turn (games, lines, activities)?
+          <select class="input" name="hyp6" required>
+            <option value="">Select...</option>
+            <option value="0">Never</option>
+            <option value="1">Sometimes</option>
+            <option value="2">Often</option>
+            <option value="3">Very Often</option>
+          </select>
+        </label>
+
+        <div class="row" style="justify-content:flex-end;margin-top:16px">
+          <button type="button" id="btnCancel" class="btn soft">Cancel</button>
+          <button type="submit" class="btn">Save Screening Result</button>
+        </div>
+      </form>
+
+      <div id="resultBox" class="card" style="margin-top:16px;display:none">
+        <h3>Screening Result</h3>
+        <p id="resultText"></p>
+        <p class="muted" style="font-size:12px">
+          This result is for educational use only and does not replace professional evaluation.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Parse childId from ?childId= in URL
+    const params = new URLSearchParams(location.search);
+    const childId = params.get('childId');
+    const childIdInput = document.getElementById('childIdInput');
+    const form = document.getElementById('adhdForm');
+    const resultBox = document.getElementById('resultBox');
+    const resultText = document.getElementById('resultText');
+
+    if (!childId) {
+      alert('No child selected. Open this from the parent dashboard.');
+    } else {
+      childIdInput.value = childId;
+    }
+
+    document.getElementById('btnCancel').onclick = () => {
+      history.back();
+    };
+
+    async function api(path, options = {}) {
+      const res = await fetch(path, {
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        ...options
+      });
+      if (!res.ok) {
+        let msg = 'Request failed';
+        try {
+          const data = await res.json();
+          if (data.error) msg = data.error;
+        } catch(e) {}
+        throw new Error(msg);
+      }
+      return res.json();
+    }
+
+    form.onsubmit = async (e) => {
+  e.preventDefault();
+
+  const rawChildId = childIdInput.value;
+  const childIdNum = Number(rawChildId);
+
+  if (!rawChildId || Number.isNaN(childIdNum) || childIdNum <= 0) {
+    alert('Child ID missing or invalid.');
+    return;
+  }
+
+  const data = new FormData(form);
+
+  const inattKeys = ['inat1','inat2','inat3','inat4','inat5','inat6'];
+  const hyperKeys = ['hyp1','hyp2','hyp3','hyp4','hyp5','hyp6'];
+
+  let inatt = 0;
+  let hyper = 0;
+
+  for (const k of inattKeys) inatt += Number(data.get(k) || 0);
+  for (const k of hyperKeys) hyper += Number(data.get(k) || 0);
+
+  try {
+    const result = await api('/api/adhd-assessment', {
+      method: 'POST',
+      body: JSON.stringify({
+        childId: childIdNum,
+        inattentiveScore: inatt,
+        hyperactiveScore: hyper
+      })
+    });
+
+    const combined = result.combinedScore;
+    resultText.innerHTML = `
+      <strong>Category:</strong> ${result.category}<br>
+      Inattentive score: ${inatt}<br>
+      Hyperactive/Impulsive score: ${hyper}<br>
+      Combined score: ${combined}
+    `;
+
+    resultBox.style.display = 'block';
+
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+  </script>
+</body>
+</html>
