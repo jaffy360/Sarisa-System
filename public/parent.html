@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>Parent Dashboard</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="utf-8"/>
+<title>Parent Dashboard</title>
+<link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
-  <div class="container">
+<div class="container">
+
+    <!-- HEADER -->
     <div class="header-hero">
       <div>
         <div style="opacity:.85">Child: <strong id="childName">Child1</strong></div>
         <div class="muted" style="opacity:.9">Guardian: <span id="guardianName">Mother User</span></div>
+
         <div class="row" style="margin-top:10px">
           <button id="btnViewChild" class="card-link">👶 View Child Dashboard</button>
           <input id="childEmail" placeholder="Link child by email" class="input" style="width:260px">
@@ -18,6 +22,7 @@
           <button id="btnLogout" class="btn soft">Logout</button>
         </div>
       </div>
+
       <div class="stats">
         <div class="chip"><div class="muted" style="color:#fff">Today's Sessions</div><div id="kpiSessions" class="v">3</div></div>
         <div class="chip"><div class="muted" style="color:#fff">Avg. Focus Time</div><div id="kpiFocus" class="v">32 mins</div></div>
@@ -25,253 +30,215 @@
       </div>
     </div>
 
+    <!-- CHILDREN LIST -->
     <div class="card" style="margin-top:10px">
       <h3>Your Linked Children</h3>
       <div id="childrenContainer"></div>
     </div>
 
+    <!-- ACTION BUTTONS -->
     <div class="row" style="justify-content:center;margin:20px 0">
       <button class="btn soft">📄 Download Report (PDF)</button>
       <button class="btn soft">📊 Export Data (CSV)</button>
       <button class="btn soft">⚙️ Settings & Customization</button>
     </div>
 
-    <!-- Settings Panel -->
-    <div id="settingsBackdrop" class="settings-backdrop hidden"></div>
+</div>
 
-    <div id="settingsPanel" class="settings-panel hidden">
-      <button id="closeSettings" class="close-btn">✖</button>
-      <h3>⚙️ Settings & Customization</h3>
-      <div class="settings-content">
-        <label>
-          <span>🎨 Theme:</span>
-          <select id="parentTheme" class="input">
-            <option value="Pink">Pink</option>
-            <option value="Purple">Purple</option>
-            <option value="Green">Green</option>
-          </select>
-        </label>
 
-        <label>
-          <span>📅 Report Frequency:</span>
-          <select id="reportFrequency" class="input">
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-          </select>
-        </label>
+<!-- TEMPLATE -->
+<template id="childDashboardTemplate">
+  <div class="child-section">
 
-        <label>
-          <span>🔔 Notifications:</span>
-          <input type="checkbox" id="notifications" checked>
-          <small>Receive updates when your child completes tasks.</small>
-        </label>
+    <h3 class="child-toggle">Child Name ▼</h3>
 
-        <label>
-          <span>🧠 Focus Reminder:</span>
-          <input type="checkbox" id="focusReminder">
-          <small>Remind child to take breaks every 30 minutes.</small>
-        </label>
+    <div class="child-content collapsed">
+
+      <div class="child-modules-grid">
+
+        <!-- Learning -->
+        <div class="card">
+          <h3>📚 Learning Progress</h3>
+          <div class="muted">Reading</div>
+          <div class="progress"><div class="bar reading-bar"></div></div>
+
+          <div class="muted" style="margin-top:8px">Writing</div>
+          <div class="progress"><div class="bar writing-bar"></div></div>
+
+          <div class="muted" style="margin-top:8px">Math</div>
+          <div class="progress"><div class="bar math-bar"></div></div>
+        </div>
+
+        <!-- Time Spent -->
+        <div class="card">
+          <h3>⏱️ Time Spent on Features</h3>
+          <ul class="list time-list"></ul>
+        </div>
+
+        <!-- Engagement -->
+        <div class="card">
+          <h3>📝 Engagement & Adherence</h3>
+          <div class="engagement-container"></div>
+        </div>
+
+        <!-- Reports -->
+        <div class="card">
+          <h3>📅 Weekly / Daily Reports</h3>
+          <div class="weekly-container"></div>
+        </div>
+
+        <!-- Insights -->
+        <div class="card">
+          <h3>🧠 Reports & Insights</h3>
+          <ul class="list insights-list"></ul>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="card">
+          <h3>💡 Suggested Actions</h3>
+          <ul class="list suggestions-list"></ul>
+          <button class="btn soft btn-adhd" type="button">🧠 Take ADHD Screening</button>
+        </div>
+
       </div>
     </div>
 
-    <!-- Child Dashboard Template -->
-    <template id="childDashboardTemplate">
-      <div class="child-section">
-        <h3 class="child-toggle">Child Name ▼</h3>
-
-        <div class="child-content collapsed">
-          <div class="child-modules-grid">
-
-            <!-- Learning Progress -->
-            <div class="card">
-              <h3>📚 Learning Progress</h3>
-              <div class="muted">Reading</div>
-              <div class="progress"><div class="bar reading-bar"></div></div>
-
-              <div class="muted" style="margin-top:8px">Writing</div>
-              <div class="progress"><div class="bar writing-bar"></div></div>
-
-              <div class="muted" style="margin-top:8px">Math</div>
-              <div class="progress"><div class="bar math-bar"></div></div>
-            </div>
-
-            <!-- Time Spent -->
-            <div class="card">
-              <h3>⏱️ Time Spent on Features</h3>
-              <ul class="list time-list"></ul>
-            </div>
-
-            <!-- Engagement -->
-            <div class="card">
-              <h3>📝 Engagement & Adherence</h3>
-              <div class="engagement-container"></div>
-            </div>
-
-            <!-- Weekly Reports -->
-            <div class="card">
-              <h3>📅 Weekly / Daily Reports</h3>
-              <div class="weekly-container"></div>
-            </div>
-
-            <!-- Insights -->
-            <div class="card">
-              <h3>🧠 Reports & Insights</h3>
-              <ul class="list insights-list"></ul>
-            </div>
-
-            <!-- Suggestions -->
-            <div class="card">
-              <h3>💡 Suggested Actions</h3>
-              <ul class="list suggestions-list"></ul>
-              <button class="btn soft btn-adhd" type="button" data-child-id="">🧠 Take ADHD Screening</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </template>
   </div>
+</template>
 
-  <script>
-    async function api(p, o = {}) {
-      const r = await fetch(p, {
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        ...o
-      });
-      if (!r.ok) throw new Error((await r.json()).error || 'Request failed');
-      return r.json();
-    }
 
-    document.getElementById('btnLogout').onclick = async () => {
-      await api('/api/auth/logout', { method: 'POST' });
-      location.href = '/';
-    };
+<script>
+// -------------------------
+// API helper
+// -------------------------
+async function api(p, o = {}) {
+  const r = await fetch(p, {
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    ...o
+  });
+  if (!r.ok) throw new Error((await r.json()).error || 'Request failed');
+  return r.json();
+}
 
-    document.getElementById('btnLink').onclick = async () => {
-      try {
-        await api('/api/parent/link-child', {
-          method: 'POST',
-          body: JSON.stringify({ childEmail: document.getElementById('childEmail').value })
-        });
-        load();
-      } catch (e) {
-        alert(e.message);
-      }
-    };
+// -------------------------
+// Logout
+// -------------------------
+document.getElementById('btnLogout').onclick = async () => {
+  await api('/api/auth/logout', { method: 'POST' });
+  location.href = '/';
+};
 
-    document.getElementById('btnViewChild').onclick = () => location.href = '/child.html';
-
-    function renderChildren(children) {
-      const container = document.getElementById('childrenContainer');
-      container.innerHTML = '';
-
-      const template = document.getElementById('childDashboardTemplate');
-
-      children.forEach(child => {
-        const clone = template.content.cloneNode(true);
-
-        const toggle = clone.querySelector('.child-toggle');
-        const content = clone.querySelector('.child-content');
-
-        toggle.textContent = `${child.name} (${child.email}) ▼`;
-
-        toggle.addEventListener('click', () => {
-          content.classList.toggle('open');
-          toggle.textContent = content.classList.contains('open')
-            ? `${child.name} (${child.email}) ▲`
-            : `${child.name} (${child.email}) ▼`;
-        });
-
-        // FILL MODULE DATA (demo)
-        clone.querySelector('.reading-bar').style.width = '80%';
-        clone.querySelector('.writing-bar').style.width = '60%';
-        clone.querySelector('.math-bar').style.width = '90%';
-
-        clone.querySelector('.time-list').innerHTML = `
-          <li>Reading – 45 mins</li>
-          <li>Writing – 20 mins</li>
-          <li>Math – 35 mins</li>
-          <li>Games – 15 mins</li>
-        `;
-
-        clone.querySelector('.engagement-container').innerHTML = `
-          Session Frequency: 5/week<br>
-          Task Completion Rate: 85%<br>
-          Routine Adherence: 90%
-        `;
-
-        clone.querySelector('.weekly-container').innerHTML = `
-          <strong>Week Summary:</strong> 9/10 tasks<br>
-          <strong>Improvement:</strong> +10%<br>
-          <strong>Focus:</strong> Morning sessions best
-        `;
-
-        clone.querySelector('.insights-list').innerHTML = `
-          <li>Focus Consistency: 80%</li>
-          <li>Mood Tracker: 4 Happy, 2 Calm</li>
-          <li>Teacher Messages: 2</li>
-        `;
-
-        clone.querySelector('.suggestions-list').innerHTML = `
-          <li>Shorter morning sessions</li>
-          <li>Reward every 3 tasks</li>
-          <li>Breaks between lessons</li>
-        `;
-
-        // ADHD BUTTON – use child.child_id from API (fallback to child.id)
-        const realAdhdBtn = clone.querySelector('.btn-adhd');
-        if (realAdhdBtn) {
-          const id = child.child_id ?? child.id;
-          realAdhdBtn.dataset.childId = id;
-          realAdhdBtn.addEventListener('click', () => {
-            location.href = `/adhd-assessment.html?childId=${encodeURIComponent(id)}`;
-          });
-        }
-
-        container.appendChild(clone);
-      });
-    }
-
-    async function load() {
-      const me = await api('/api/auth/me');
-      if (!me.user || me.user.role !== 'parent') location.href = '/';
-      const kids = await api('/api/parent/children');
-      renderChildren(kids);
-      document.getElementById('guardianName').textContent = me.user.name || 'Parent';
-      if (kids[0]) document.getElementById('childName').textContent = kids[0].name;
-    }
+// -------------------------
+// Link Child
+// -------------------------
+document.getElementById('btnLink').onclick = async () => {
+  try {
+    const childEmail = document.getElementById('childEmail').value;
+    await api('/api/parent/link-child', {
+      method: 'POST',
+      body: JSON.stringify({ childEmail })
+    });
     load();
+  } catch (e) {
+    alert(e.message);
+  }
+};
 
-    // SETTINGS BUTTON SELECTOR
-    const settingsButton = Array.from(document.querySelectorAll('button')).find(btn =>
-      btn.textContent.includes('Settings & Customization')
-    );
+// -------------------------
+// View Child Dashboard
+// -------------------------
+document.getElementById('btnViewChild').onclick = () =>
+  location.href = '/child.html';
 
-    const settingsPanel = document.getElementById('settingsPanel');
-    const settingsBackdrop = document.getElementById('settingsBackdrop');
+// -------------------------
+// Render Children
+// -------------------------
+function renderChildren(children) {
+  const container = document.getElementById('childrenContainer');
+  container.innerHTML = '';
 
-    if (settingsButton && settingsPanel && settingsBackdrop) {
-      settingsButton.addEventListener('click', () => {
-        const isHidden = settingsPanel.classList.contains('hidden');
-        settingsPanel.classList.toggle('hidden', !isHidden);
-        settingsBackdrop.classList.toggle('hidden', !isHidden);
-      });
+  const template = document.getElementById('childDashboardTemplate');
 
-      // Click outside to close
-      settingsBackdrop.addEventListener('click', () => {
-        settingsPanel.classList.add('hidden');
-        settingsBackdrop.classList.add('hidden');
-      });
+  children.forEach(child => {
+    const clone = template.content.cloneNode(true);
 
-      const closeSettings = document.getElementById('closeSettings');
-      if (closeSettings) {
-        closeSettings.addEventListener('click', () => {
-          settingsPanel.classList.add('hidden');
-          settingsBackdrop.classList.add('hidden');
-        });
-      }
-    }
-  </script>
+    // Toggle open/close
+    const toggle = clone.querySelector('.child-toggle');
+    const content = clone.querySelector('.child-content');
+
+    toggle.textContent = `${child.name} (${child.email}) ▼`;
+    toggle.addEventListener('click', () => {
+      content.classList.toggle('open');
+      toggle.textContent = content.classList.contains('open')
+        ? `${child.name} (${child.email}) ▲`
+        : `${child.name} (${child.email}) ▼`;
+    });
+
+    // --- MODULE INFO ---
+    clone.querySelector('.reading-bar').style.width = "80%";
+    clone.querySelector('.writing-bar').style.width = "60%";
+    clone.querySelector('.math-bar').style.width = "90%";
+
+    clone.querySelector('.time-list').innerHTML = `
+      <li>Reading – 45 mins</li>
+      <li>Writing – 20 mins</li>
+      <li>Math – 35 mins</li>
+      <li>Games – 15 mins</li>
+    `;
+
+    clone.querySelector('.engagement-container').innerHTML = `
+      Session Frequency: 5/week<br>
+      Task Completion Rate: 85%<br>
+      Routine Adherence: 90%
+    `;
+
+    clone.querySelector('.weekly-container').innerHTML = `
+      <strong>Week Summary:</strong> 9/10 tasks<br>
+      <strong>Improvement:</strong> +10%<br>
+      <strong>Focus:</strong> Morning sessions best
+    `;
+
+    clone.querySelector('.insights-list').innerHTML = `
+      <li>Focus Consistency: 80%</li>
+      <li>Mood Tracker: 4 Happy, 2 Calm</li>
+      <li>Teacher Messages: 2</li>
+    `;
+
+    clone.querySelector('.suggestions-list').innerHTML = `
+      <li>Shorter morning sessions</li>
+      <li>Reward every 3 tasks</li>
+      <li>Breaks between lessons</li>
+    `;
+
+    // ADHD button
+    const adhdBtn = clone.querySelector('.btn-adhd');
+    adhdBtn.addEventListener('click', () => {
+      location.href = `/adhd-assessment.html?childId=${child.child_id}`;
+    });
+
+    container.appendChild(clone);
+  });
+}
+
+
+// -------------------------
+// Load Data
+// -------------------------
+async function load() {
+  const me = await api('/api/auth/me');
+  if (!me.user || me.user.role !== 'parent') location.href = '/';
+
+  const kids = await api('/api/parent/children');
+  renderChildren(kids);
+
+  document.getElementById('guardianName').textContent = me.user.name;
+  if (kids[0]) document.getElementById('childName').textContent = kids[0].name;
+}
+
+load();
+</script>
+
+
 </body>
 </html>
